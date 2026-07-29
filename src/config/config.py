@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     SMTP_PASSWORD: str = ""
     SMTP_FROM_EMAIL: str = ""
 
+    N8N_AVISAR_INICIO_WEBHOOK_URL: str = ""
     N8N_AVISAR_PRONTO_WEBHOOK_URL: str = ""
 
     CORS_ALLOWED_ORIGINS: str = "http://localhost:5173"

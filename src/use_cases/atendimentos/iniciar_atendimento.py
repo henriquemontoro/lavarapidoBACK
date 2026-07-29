@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from src.models.user_model import UserModel
 from src.repositories.atendimento_repository import AtendimentoRepository
 from src.repositories.cliente_repository import ClienteRepository
+from src.utils.n8n_webhook import notificar_inicio
 
 
 class IniciarAtendimentoRequest(BaseModel):
@@ -31,6 +32,7 @@ class IniciarAtendimentoUseCase:
             cliente_id=request.cliente_id,
             iniciado_por_id=current_user.id,
         )
+        notificar_inicio(telefone=cliente.telefone, modelo_carro=cliente.modelo_carro)
         return {
             "id": atendimento.id,
             "cliente_id": atendimento.cliente_id,
