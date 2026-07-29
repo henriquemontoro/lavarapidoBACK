@@ -1,15 +1,17 @@
-from typing import List, Optional
+from datetime import datetime
+from typing import List, Literal, Optional
 
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-from datetime import datetime
 
 from src.database.database import get_db
 from src.middlewares.require_role import require_role
 from src.models.user_model import UserModel, UserRole
 from src.use_cases.clientes.create_cliente import CreateClienteRequest, CreateClienteUseCase
+from src.use_cases.clientes.delete_cliente import DeleteClienteUseCase
 from src.use_cases.clientes.list_clientes import ListClientesUseCase
+from src.use_cases.clientes.update_cliente import UpdateClienteRequest, UpdateClienteUseCase
 
 router = APIRouter(prefix="/clientes", tags=["clientes"])
 
@@ -20,8 +22,10 @@ class ClienteResponse(BaseModel):
     sobrenome: str
     telefone: str
     modelo_carro: str
+    status: Literal["aguardando", "em_andamento", "finalizado"]
     atendimento_ativo_id: Optional[int] = None
     atendimento_iniciado_em: Optional[datetime] = None
+    atendimento_finalizado_em: Optional[datetime] = None
 
 
 @router.post("", response_model=ClienteResponse)
@@ -41,3 +45,24 @@ def list_clientes(
 ):
     use_case = ListClientesUseCase(db)
     return use_case.execute()
+
+
+@router.put("/{cliente_id}", response_model=ClienteResponse)
+def update_cliente(
+    cliente_id: int,
+    request: UpdateClienteRequest,
+    db: Session = Depends(get_db),
+    current_user: UserModel = Depends(require_role(UserRole.OWNER, UserRole.EMPLOYEE)),
+):
+    use_case = UpdateClienteUseCase(db)
+    return use_case.execute(cliente_id, request)
+
+
+@router.delete("/{cliente_id}", status_code=204)
+def delete_cliente(
+    cliente_id: int,
+    db: Session = Depends(get_db),
+    current_user: UserModel = Depends(require_role(UserRole.OWNER, UserRole.EMPLOYEE)),
+):
+    use_case = DeleteClienteUseCase(db)
+    use_case.execute(cliente_id)

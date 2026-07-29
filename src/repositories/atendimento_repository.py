@@ -30,6 +30,17 @@ class AtendimentoRepository:
     def list_ativos(self) -> List[AtendimentoModel]:
         return self.db.query(AtendimentoModel).filter(AtendimentoModel.finalizado_em.is_(None)).all()
 
+    def list_all(self) -> List[AtendimentoModel]:
+        return self.db.query(AtendimentoModel).all()
+
+    def get_ultimo_by_cliente_id(self, cliente_id: int) -> Optional[AtendimentoModel]:
+        return (
+            self.db.query(AtendimentoModel)
+            .filter(AtendimentoModel.cliente_id == cliente_id)
+            .order_by(AtendimentoModel.id.desc())
+            .first()
+        )
+
     def finalizar(self, atendimento_id: int, finalizado_por_id: int) -> Optional[AtendimentoModel]:
         atendimento = self.get_by_id(atendimento_id)
         if atendimento:
@@ -38,3 +49,7 @@ class AtendimentoRepository:
             self.db.commit()
             self.db.refresh(atendimento)
         return atendimento
+
+    def delete_all_by_cliente_id(self, cliente_id: int) -> None:
+        self.db.query(AtendimentoModel).filter(AtendimentoModel.cliente_id == cliente_id).delete()
+        self.db.commit()

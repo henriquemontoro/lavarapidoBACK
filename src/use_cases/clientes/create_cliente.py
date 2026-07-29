@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from src.repositories.cliente_repository import ClienteRepository
+from src.use_cases.clientes.cliente_response import build_cliente_response
 
 
 class CreateClienteRequest(BaseModel):
@@ -22,12 +23,4 @@ class CreateClienteUseCase:
             telefone=request.telefone,
             modelo_carro=request.modelo_carro,
         )
-        return {
-            "id": cliente.id,
-            "nome": cliente.nome,
-            "sobrenome": cliente.sobrenome,
-            "telefone": cliente.telefone,
-            "modelo_carro": cliente.modelo_carro,
-            "atendimento_ativo_id": None,
-            "atendimento_iniciado_em": None,
-        }
+        return build_cliente_response(cliente, ultimo_atendimento=None)

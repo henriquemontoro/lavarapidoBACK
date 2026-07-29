@@ -26,3 +26,24 @@ class ClienteRepository:
 
     def get_by_id(self, cliente_id: int) -> Optional[ClienteModel]:
         return self.db.query(ClienteModel).filter(ClienteModel.id == cliente_id).first()
+
+    def update(
+        self, cliente_id: int, nome: str, sobrenome: str, telefone: str, modelo_carro: str
+    ) -> Optional[ClienteModel]:
+        cliente = self.get_by_id(cliente_id)
+        if cliente:
+            cliente.nome = nome
+            cliente.sobrenome = sobrenome
+            cliente.telefone = telefone
+            cliente.modelo_carro = modelo_carro
+            self.db.commit()
+            self.db.refresh(cliente)
+        return cliente
+
+    def delete(self, cliente_id: int) -> bool:
+        cliente = self.get_by_id(cliente_id)
+        if cliente:
+            self.db.delete(cliente)
+            self.db.commit()
+            return True
+        return False
