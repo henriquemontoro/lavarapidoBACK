@@ -48,7 +48,7 @@ SERVICE_CATALOG: List[ServicoCatalogo] = [
         ],
     },
     {"title": "Polimento", "minutes": 240, "price": 500.0, "detalhamento": None},
-    {"title": "Cera", "minutes": 20, "price": 30.0, "detalhamento": None},
+    {"title": "Enceramento", "minutes": 20, "price": 30.0, "detalhamento": None},
     {"title": "Higienização do Couro", "minutes": 120, "price": 75.0, "detalhamento": None},
     {"title": "Higienização do Tecido", "minutes": 100, "price": 50.0, "detalhamento": None},
 ]
