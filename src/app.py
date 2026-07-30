@@ -20,6 +20,7 @@ app.include_router(auth.router)
 app.include_router(dashboard.router)
 app.include_router(clientes.router)
 app.include_router(atendimentos.router)
+app.include_router(atendimentos.foto_router)
 app.include_router(users.router)
 
 

@@ -22,10 +22,14 @@ class ClienteResponse(BaseModel):
     sobrenome: str
     telefone: str
     modelo_carro: str
+    placa: Optional[str] = None
     status: Literal["aguardando", "em_andamento", "finalizado"]
     atendimento_ativo_id: Optional[int] = None
     atendimento_iniciado_em: Optional[datetime] = None
     atendimento_finalizado_em: Optional[datetime] = None
+    ultimo_atendimento_id: Optional[int] = None
+    fotos_inicio_count: int = 0
+    fotos_fim_count: int = 0
 
 
 @router.post("", response_model=ClienteResponse)

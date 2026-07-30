@@ -12,4 +12,5 @@ class ClienteModel(Base):
     sobrenome = Column(String(255), nullable=False)
     telefone = Column(String(30), nullable=False)
     modelo_carro = Column(String(255), nullable=False)
+    placa = Column(String(10), nullable=True)
     created_at = Column(DateTime, server_default=func.now())

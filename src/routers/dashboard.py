@@ -19,7 +19,7 @@ router = APIRouter(prefix="/dashboard", tags=["dashboard"])
 def get_summary(
     period: Literal["week", "month"] = "week",
     db: Session = Depends(get_db),
-    current_user: UserModel = Depends(require_role(UserRole.OWNER)),
+    current_user: UserModel = Depends(require_role(UserRole.OWNER, UserRole.EMPLOYEE)),
 ):
     use_case = GetSummaryUseCase(db)
     return use_case.execute(GetSummaryRequest(period=period))

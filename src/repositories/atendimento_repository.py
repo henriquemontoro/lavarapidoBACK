@@ -4,6 +4,7 @@ from typing import List, Optional
 from sqlalchemy.orm import Session
 
 from src.models.atendimento_model import AtendimentoModel
+from src.models.foto_atendimento_model import FotoAtendimentoModel
 
 
 class AtendimentoRepository:
@@ -51,5 +52,15 @@ class AtendimentoRepository:
         return atendimento
 
     def delete_all_by_cliente_id(self, cliente_id: int) -> None:
+        atendimento_ids = [
+            row.id
+            for row in self.db.query(AtendimentoModel.id)
+            .filter(AtendimentoModel.cliente_id == cliente_id)
+            .all()
+        ]
+        if atendimento_ids:
+            self.db.query(FotoAtendimentoModel).filter(
+                FotoAtendimentoModel.atendimento_id.in_(atendimento_ids)
+            ).delete(synchronize_session=False)
         self.db.query(AtendimentoModel).filter(AtendimentoModel.cliente_id == cliente_id).delete()
         self.db.commit()
