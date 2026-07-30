@@ -22,6 +22,7 @@ class AtendimentoAbertoResponse(BaseModel):
     placa: Optional[str] = None
     modelo_carro: str
     cor_carro: Optional[str] = None
+    preco_total: float = 0.0
 
 
 class AceitarTermoRequest(BaseModel):

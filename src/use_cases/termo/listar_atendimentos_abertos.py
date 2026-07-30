@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 
+from src.data.servicos_catalogo import calcular_preco_total
 from src.repositories.atendimento_repository import AtendimentoRepository
 from src.repositories.cliente_repository import ClienteRepository
 
@@ -22,6 +23,7 @@ class ListarAtendimentosAbertosUseCase:
                         "placa": cliente.placa,
                         "modelo_carro": cliente.modelo_carro,
                         "cor_carro": cliente.cor_carro,
+                        "preco_total": calcular_preco_total(cliente.servicos),
                     }
                 )
         return resultado

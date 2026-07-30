@@ -1,5 +1,6 @@
 from typing import List, Optional
 
+from src.data.servicos_catalogo import calcular_preco_total
 from src.models.atendimento_model import AtendimentoModel
 from src.models.atendimento_servico_model import AtendimentoServicoModel
 from src.models.cliente_model import ClienteModel
@@ -30,6 +31,7 @@ def build_cliente_response(
         "placa": cliente.placa,
         "cor_carro": cliente.cor_carro,
         "servicos": cliente.servicos or [],
+        "preco_total": calcular_preco_total(cliente.servicos),
         "status": status,
         "atendimento_ativo_id": ultimo_atendimento.id if status == "em_andamento" else None,
         "atendimento_iniciado_em": ultimo_atendimento.iniciado_em if ultimo_atendimento else None,

@@ -32,6 +32,7 @@ class ClienteResponse(BaseModel):
     placa: Optional[str] = None
     cor_carro: Optional[str] = None
     servicos: List[str] = []
+    preco_total: float = 0.0
     status: Literal["aguardando", "em_andamento", "finalizado"]
     atendimento_ativo_id: Optional[int] = None
     atendimento_iniciado_em: Optional[datetime] = None

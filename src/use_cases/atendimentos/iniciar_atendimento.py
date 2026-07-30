@@ -3,6 +3,7 @@ from typing import List, Tuple
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
+from src.data.servicos_catalogo import expandir_em_etapas
 from src.models.foto_atendimento_model import MomentoFoto
 from src.models.user_model import UserModel
 from src.repositories.atendimento_repository import AtendimentoRepository
@@ -46,8 +47,9 @@ class IniciarAtendimentoUseCase:
             registrada_por_id=current_user.id,
             arquivos=fotos,
         )
-        if cliente.servicos:
-            self.servico_repository.create_many(atendimento_id=atendimento.id, servicos=cliente.servicos)
+        etapas = expandir_em_etapas(cliente.servicos)
+        if etapas:
+            self.servico_repository.create_many(atendimento_id=atendimento.id, servicos=etapas)
         notificar_inicio(telefone=cliente.telefone, modelo_carro=cliente.modelo_carro)
         return {
             "id": atendimento.id,
