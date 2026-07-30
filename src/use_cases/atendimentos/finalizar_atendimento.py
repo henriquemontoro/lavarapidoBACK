@@ -39,6 +39,12 @@ class FinalizarAtendimentoUseCase:
                 detail="Ainda há serviços pendentes nesse atendimento",
             )
 
+        if atendimento.termo_aceito_em is None:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="O termo de adesão ainda não foi assinado pelo cliente",
+            )
+
         atendimento = self.atendimento_repository.finalizar(atendimento_id, current_user.id)
         self.foto_repository.create_many(
             atendimento_id=atendimento.id,

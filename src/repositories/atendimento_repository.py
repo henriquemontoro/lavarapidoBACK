@@ -43,6 +43,42 @@ class AtendimentoRepository:
             .first()
         )
 
+    def aceitar_termo(
+        self,
+        atendimento_id: int,
+        cpf: str,
+        tem_plano: bool,
+        plano: Optional[str],
+    ) -> Optional[AtendimentoModel]:
+        atendimento = self.get_by_id(atendimento_id)
+        if atendimento:
+            atendimento.termo_aceito_em = datetime.now(timezone.utc)
+            atendimento.termo_cpf = cpf
+            atendimento.termo_tem_plano = tem_plano
+            atendimento.termo_plano = plano
+            self.db.commit()
+            self.db.refresh(atendimento)
+        return atendimento
+
+    def limpar_termo(self, atendimento_id: int) -> Optional[AtendimentoModel]:
+        atendimento = self.get_by_id(atendimento_id)
+        if atendimento:
+            atendimento.termo_aceito_em = None
+            atendimento.termo_cpf = None
+            atendimento.termo_tem_plano = None
+            atendimento.termo_plano = None
+            self.db.commit()
+            self.db.refresh(atendimento)
+        return atendimento
+
+    def list_com_termo_aceito(self) -> List[AtendimentoModel]:
+        return (
+            self.db.query(AtendimentoModel)
+            .filter(AtendimentoModel.termo_aceito_em.isnot(None))
+            .order_by(AtendimentoModel.termo_aceito_em.desc())
+            .all()
+        )
+
     def finalizar(self, atendimento_id: int, finalizado_por_id: int) -> Optional[AtendimentoModel]:
         atendimento = self.get_by_id(atendimento_id)
         if atendimento:

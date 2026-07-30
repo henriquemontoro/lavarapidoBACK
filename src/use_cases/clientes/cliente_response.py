@@ -34,6 +34,7 @@ def build_cliente_response(
         "atendimento_ativo_id": ultimo_atendimento.id if status == "em_andamento" else None,
         "atendimento_iniciado_em": ultimo_atendimento.iniciado_em if ultimo_atendimento else None,
         "atendimento_finalizado_em": ultimo_atendimento.finalizado_em if ultimo_atendimento else None,
+        "termo_aceito": bool(ultimo_atendimento and ultimo_atendimento.termo_aceito_em is not None),
         "ultimo_atendimento_id": ultimo_atendimento.id if ultimo_atendimento else None,
         "fotos_inicio_count": counts["inicio"],
         "fotos_fim_count": counts["fim"],
