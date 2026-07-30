@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from src.repositories.atendimento_repository import AtendimentoRepository
 
-PLANOS_VALIDOS = ["Essencial", "Completo", "Premium"]
+PLANOS_VALIDOS = ["Bronze", "Prata", "Ouro"]
 
 
 class AceitarTermoUseCase:
