@@ -18,6 +18,8 @@ class Settings(BaseSettings):
     N8N_AVISAR_INICIO_WEBHOOK_URL: str = ""
     N8N_AVISAR_PRONTO_WEBHOOK_URL: str = ""
 
+    OPENAI_API_KEY: str = ""
+
     CORS_ALLOWED_ORIGINS: str = "http://localhost:5173"
 
     class Config:
