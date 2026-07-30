@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from src.models.foto_atendimento_model import MomentoFoto
 from src.models.user_model import UserModel
 from src.repositories.atendimento_repository import AtendimentoRepository
+from src.repositories.atendimento_servico_repository import AtendimentoServicoRepository
 from src.repositories.cliente_repository import ClienteRepository
 from src.repositories.foto_atendimento_repository import FotoAtendimentoRepository
 from src.utils.n8n_webhook import notificar_inicio
@@ -16,6 +17,7 @@ class IniciarAtendimentoUseCase:
         self.cliente_repository = ClienteRepository(db)
         self.atendimento_repository = AtendimentoRepository(db)
         self.foto_repository = FotoAtendimentoRepository(db)
+        self.servico_repository = AtendimentoServicoRepository(db)
 
     def execute(self, cliente_id: int, fotos: List[Tuple[bytes, str]], current_user: UserModel):
         if not fotos:
@@ -44,6 +46,8 @@ class IniciarAtendimentoUseCase:
             registrada_por_id=current_user.id,
             arquivos=fotos,
         )
+        if cliente.servicos:
+            self.servico_repository.create_many(atendimento_id=atendimento.id, servicos=cliente.servicos)
         notificar_inicio(telefone=cliente.telefone, modelo_carro=cliente.modelo_carro)
         return {
             "id": atendimento.id,

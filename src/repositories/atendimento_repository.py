@@ -4,6 +4,7 @@ from typing import List, Optional
 from sqlalchemy.orm import Session
 
 from src.models.atendimento_model import AtendimentoModel
+from src.models.atendimento_servico_model import AtendimentoServicoModel
 from src.models.foto_atendimento_model import FotoAtendimentoModel
 
 
@@ -61,6 +62,9 @@ class AtendimentoRepository:
         if atendimento_ids:
             self.db.query(FotoAtendimentoModel).filter(
                 FotoAtendimentoModel.atendimento_id.in_(atendimento_ids)
+            ).delete(synchronize_session=False)
+            self.db.query(AtendimentoServicoModel).filter(
+                AtendimentoServicoModel.atendimento_id.in_(atendimento_ids)
             ).delete(synchronize_session=False)
         self.db.query(AtendimentoModel).filter(AtendimentoModel.cliente_id == cliente_id).delete()
         self.db.commit()

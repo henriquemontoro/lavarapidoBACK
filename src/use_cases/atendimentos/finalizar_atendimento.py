@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from src.models.foto_atendimento_model import MomentoFoto
 from src.models.user_model import UserModel
 from src.repositories.atendimento_repository import AtendimentoRepository
+from src.repositories.atendimento_servico_repository import AtendimentoServicoRepository
 from src.repositories.cliente_repository import ClienteRepository
 from src.repositories.foto_atendimento_repository import FotoAtendimentoRepository
 from src.utils.n8n_webhook import notificar_pronto
@@ -16,6 +17,7 @@ class FinalizarAtendimentoUseCase:
         self.atendimento_repository = AtendimentoRepository(db)
         self.cliente_repository = ClienteRepository(db)
         self.foto_repository = FotoAtendimentoRepository(db)
+        self.servico_repository = AtendimentoServicoRepository(db)
 
     def execute(self, atendimento_id: int, fotos: List[Tuple[bytes, str]], current_user: UserModel):
         if not fotos:
@@ -30,6 +32,12 @@ class FinalizarAtendimentoUseCase:
 
         if atendimento.finalizado_em is not None:
             raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Atendimento já finalizado")
+
+        if not self.servico_repository.all_concluidos(atendimento_id):
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="Ainda há serviços pendentes nesse atendimento",
+            )
 
         atendimento = self.atendimento_repository.finalizar(atendimento_id, current_user.id)
         self.foto_repository.create_many(

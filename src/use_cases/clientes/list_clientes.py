@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 
 from src.repositories.atendimento_repository import AtendimentoRepository
+from src.repositories.atendimento_servico_repository import AtendimentoServicoRepository
 from src.repositories.cliente_repository import ClienteRepository
 from src.repositories.foto_atendimento_repository import FotoAtendimentoRepository
 from src.use_cases.clientes.cliente_response import build_cliente_response
@@ -11,6 +12,7 @@ class ListClientesUseCase:
         self.cliente_repository = ClienteRepository(db)
         self.atendimento_repository = AtendimentoRepository(db)
         self.foto_repository = FotoAtendimentoRepository(db)
+        self.servico_repository = AtendimentoServicoRepository(db)
 
     def execute(self):
         clientes = self.cliente_repository.list_all()
@@ -28,5 +30,8 @@ class ListClientesUseCase:
             foto_counts = (
                 self.foto_repository.count_by_atendimento(ultimo_atendimento.id) if ultimo_atendimento else None
             )
-            resultado.append(build_cliente_response(cliente, ultimo_atendimento, foto_counts))
+            servicos_status = (
+                self.servico_repository.list_by_atendimento(ultimo_atendimento.id) if ultimo_atendimento else []
+            )
+            resultado.append(build_cliente_response(cliente, ultimo_atendimento, foto_counts, servicos_status))
         return resultado

@@ -16,6 +16,13 @@ from src.use_cases.clientes.update_cliente import UpdateClienteRequest, UpdateCl
 router = APIRouter(prefix="/clientes", tags=["clientes"])
 
 
+class ServicoStatusResponse(BaseModel):
+    id: int
+    servico: str
+    concluido: bool
+    concluido_em: Optional[datetime] = None
+
+
 class ClienteResponse(BaseModel):
     id: int
     nome: str
@@ -23,6 +30,8 @@ class ClienteResponse(BaseModel):
     telefone: str
     modelo_carro: str
     placa: Optional[str] = None
+    cor_carro: Optional[str] = None
+    servicos: List[str] = []
     status: Literal["aguardando", "em_andamento", "finalizado"]
     atendimento_ativo_id: Optional[int] = None
     atendimento_iniciado_em: Optional[datetime] = None
@@ -30,6 +39,7 @@ class ClienteResponse(BaseModel):
     ultimo_atendimento_id: Optional[int] = None
     fotos_inicio_count: int = 0
     fotos_fim_count: int = 0
+    servicos_status: List[ServicoStatusResponse] = []
 
 
 @router.post("", response_model=ClienteResponse)

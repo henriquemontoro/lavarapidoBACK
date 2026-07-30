@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
@@ -13,6 +13,8 @@ class CreateClienteRequest(BaseModel):
     telefone: str
     modelo_carro: str
     placa: Optional[str] = None
+    cor_carro: Optional[str] = None
+    servicos: Optional[List[str]] = None
 
 
 class CreateClienteUseCase:
@@ -26,5 +28,7 @@ class CreateClienteUseCase:
             telefone=request.telefone,
             modelo_carro=request.modelo_carro,
             placa=request.placa,
+            cor_carro=request.cor_carro,
+            servicos=request.servicos,
         )
         return build_cliente_response(cliente, ultimo_atendimento=None)

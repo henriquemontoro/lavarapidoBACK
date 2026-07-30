@@ -12,6 +12,7 @@ from src.models.user_model import UserModel, UserRole
 from src.use_cases.atendimentos.finalizar_atendimento import FinalizarAtendimentoUseCase
 from src.use_cases.atendimentos.iniciar_atendimento import IniciarAtendimentoUseCase
 from src.use_cases.atendimentos.list_fotos import GetFotoUseCase, ListFotosUseCase
+from src.use_cases.atendimentos.toggle_servico import ToggleServicoUseCase
 
 router = APIRouter(prefix="/atendimentos", tags=["atendimentos"])
 
@@ -27,6 +28,17 @@ class FotoMetadataResponse(BaseModel):
     id: int
     registrada_em: datetime
     registrada_por: Optional[str] = None
+
+
+class ToggleServicoRequest(BaseModel):
+    concluido: bool
+
+
+class ServicoResponse(BaseModel):
+    id: int
+    atendimento_id: int
+    servico: str
+    concluido: bool
 
 
 async def _read_fotos(fotos: List[UploadFile]) -> List[tuple]:
@@ -66,6 +78,18 @@ def list_fotos(
 ):
     use_case = ListFotosUseCase(db)
     return use_case.execute(atendimento_id, momento)
+
+
+@router.patch("/{atendimento_id}/servicos/{servico_id}", response_model=ServicoResponse)
+def toggle_servico(
+    atendimento_id: int,
+    servico_id: int,
+    request: ToggleServicoRequest,
+    db: Session = Depends(get_db),
+    current_user: UserModel = Depends(require_role(UserRole.OWNER, UserRole.EMPLOYEE)),
+):
+    use_case = ToggleServicoUseCase(db)
+    return use_case.execute(atendimento_id, servico_id, request.concluido, current_user)
 
 
 foto_router = APIRouter(prefix="/fotos", tags=["atendimentos"])

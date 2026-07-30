@@ -14,6 +14,7 @@ load_dotenv()
 
 from src.database.database import Base  # noqa: E402
 from src.models.atendimento_model import AtendimentoModel  # noqa: E402, F401
+from src.models.atendimento_servico_model import AtendimentoServicoModel  # noqa: E402, F401
 from src.models.cliente_model import ClienteModel  # noqa: E402, F401
 from src.models.foto_atendimento_model import FotoAtendimentoModel  # noqa: E402, F401
 from src.models.user_model import UserModel  # noqa: E402, F401
