@@ -9,6 +9,7 @@ from src.database.database import get_db
 from src.middlewares.require_role import require_role
 from src.middlewares.validate_webhook_secret import validate_webhook_secret
 from src.models.user_model import UserModel, UserRole
+from src.use_cases.agendamentos.cancelar_agendamento import CancelarAgendamentoUseCase
 from src.use_cases.agendamentos.criar_agendamento import CriarAgendamentoUseCase
 from src.use_cases.agendamentos.listar_agendamentos import ListarAgendamentosUseCase
 
@@ -60,3 +61,16 @@ def listar_agendamentos(
 ):
     use_case = ListarAgendamentosUseCase(db)
     return use_case.execute()
+
+
+@router.patch("/{agendamento_id}/cancelar", response_model=AgendamentoResponse)
+def cancelar_agendamento(
+    agendamento_id: int,
+    db: Session = Depends(get_db),
+    current_user: UserModel = Depends(require_role(UserRole.OWNER, UserRole.EMPLOYEE)),
+):
+    """Desmarca um agendamento pelo site. Só muda o status aqui no painel —
+    não libera o horário na Data Table do n8n, que é a fonte da verdade da
+    agenda usada pelo assistente do WhatsApp."""
+    use_case = CancelarAgendamentoUseCase(db)
+    return use_case.execute(agendamento_id)

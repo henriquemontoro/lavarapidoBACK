@@ -17,6 +17,10 @@ class Settings(BaseSettings):
 
     N8N_AVISAR_INICIO_WEBHOOK_URL: str = ""
     N8N_AVISAR_PRONTO_WEBHOOK_URL: str = ""
+    # Chamado quando um agendamento é desmarcado pelo site, pra liberar o(s)
+    # horário(s) na Data Table "Agenda Horarios" do n8n (que é a fonte da
+    # verdade da agenda usada pelo assistente do WhatsApp).
+    N8N_CANCELAR_AGENDAMENTO_WEBHOOK_URL: str = ""
 
     # Segredo compartilhado com o workflow do n8n: ele manda esse valor no header
     # X-N8N-Secret ao chamar POST /agendamentos, e a API confere antes de gravar.

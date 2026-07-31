@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from sqlalchemy.orm import Session
 
@@ -46,3 +46,12 @@ class AgendamentoRepository:
             .order_by(AgendamentoModel.data.asc(), AgendamentoModel.horario_inicio.asc())
             .all()
         )
+
+    def get_by_id(self, agendamento_id: int) -> Optional[AgendamentoModel]:
+        return self.db.query(AgendamentoModel).filter(AgendamentoModel.id == agendamento_id).first()
+
+    def cancelar(self, agendamento: AgendamentoModel) -> AgendamentoModel:
+        agendamento.status = "cancelado"
+        self.db.commit()
+        self.db.refresh(agendamento)
+        return agendamento
