@@ -3,8 +3,9 @@ from typing import List, Optional, TypedDict
 
 class ServicoCatalogo(TypedDict):
     title: str
-    minutes: int
-    price: float
+    # None = sob consulta (escopo variável, orçado e cronometrado na hora)
+    minutes: Optional[int]
+    price: Optional[float]
     detalhamento: Optional[List[str]]
 
 
@@ -47,6 +48,7 @@ SERVICE_CATALOG: List[ServicoCatalogo] = [
             "Cheirinho",
         ],
     },
+    {"title": "Lavagem Detalhada", "minutes": None, "price": None, "detalhamento": None},
     {"title": "Polimento", "minutes": 240, "price": 500.0, "detalhamento": None},
     {"title": "Enceramento", "minutes": 20, "price": 30.0, "detalhamento": None},
     {"title": "Higienização do Couro", "minutes": 120, "price": 75.0, "detalhamento": None},
@@ -59,7 +61,7 @@ _ORDER_INDEX = {item["title"]: index for index, item in enumerate(SERVICE_CATALO
 
 def get_price(title: str) -> float:
     item = _BY_TITLE.get(title)
-    return item["price"] if item else 0.0
+    return (item["price"] if item else None) or 0.0
 
 
 def calcular_preco_total(servicos: Optional[List[str]]) -> float:
