@@ -18,6 +18,7 @@ from src.models.atendimento_servico_model import AtendimentoServicoModel  # noqa
 from src.models.cliente_model import ClienteModel  # noqa: E402, F401
 from src.models.foto_atendimento_model import FotoAtendimentoModel  # noqa: E402, F401
 from src.models.user_model import UserModel  # noqa: E402, F401
+from src.models.lavagem_model import LavagemModel  # noqa: E402, F401
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
