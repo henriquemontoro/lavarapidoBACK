@@ -18,6 +18,10 @@ class Settings(BaseSettings):
     N8N_AVISAR_INICIO_WEBHOOK_URL: str = ""
     N8N_AVISAR_PRONTO_WEBHOOK_URL: str = ""
 
+    # Segredo compartilhado com o workflow do n8n: ele manda esse valor no header
+    # X-N8N-Secret ao chamar POST /agendamentos, e a API confere antes de gravar.
+    N8N_INBOUND_SECRET: str = ""
+
     OPENAI_API_KEY: str = ""
 
     CORS_ALLOWED_ORIGINS: str = "http://localhost:5173"
